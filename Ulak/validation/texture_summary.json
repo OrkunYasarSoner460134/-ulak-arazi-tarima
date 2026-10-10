@@ -1,0 +1,12 @@
+{
+  "date": "2026-09-18",
+  "source": "ISRIC WoSIS latest, CC BY 4.0 Turkish shallow clay/sand field observations",
+  "sample_count": 13,
+  "attempted_count": 13,
+  "clay_mae_percentage_points": 11.64,
+  "sand_mae_percentage_points": 9.1,
+  "clay_bias_percentage_points": -10.24,
+  "sand_bias_percentage_points": 6.51,
+  "clay_within_10pp": 8,
+  "sand_within_10pp": 8
+}

@@ -1,0 +1,14 @@
+[
+  {"question": "Erozyonu önlemek için neler yapmalıyız?", "expected": "erosion_prevention"},
+  {"question": "Şiddetli yağmur heyelanı nasıl etkiler?", "expected": "rainfall_water"},
+  {"question": "Bu arsaya ev yapmak güvenli mi?", "expected": "unknown_site"},
+  {"question": "Erozyon ve heyelan aynı olay mı?", "expected": "erosion_vs_landslide"},
+  {"question": "NDVI yüksekse taşıma kapasitesi iyi midir?", "expected": "ndvi"},
+  {"question": "Kil oranından zeminin dayanımını bulabilir miyim?", "expected": "texture_not_strength"},
+  {"question": "Haritadaki 80 puan yüzde 80 olasılık mı?", "expected": "score_limit"},
+  {"question": "Çatlaklar ve eğilen ağaçlar heyelan belirtisi olabilir mi?", "expected": "warning_signs"},
+  {"question": "Zemin etüdünde neden numune alınır?", "expected": "afad_soil_survey"},
+  {"question": "SRTM eğimi parsel ölçümü sayılır mı?", "expected": "srtm"},
+  {"question": "Drenaj heyelanı kesin önler mi?", "expected": "drainage"},
+  {"question": "Bana makarna tarifi ver", "expected": null}
+]

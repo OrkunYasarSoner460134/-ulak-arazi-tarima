@@ -1,0 +1,170 @@
+[
+  {
+    "id": "landslide_definition",
+    "title": "Heyelan tanımı",
+    "source": "https://www.usgs.gov/faqs/what-a-landslide-and-what-causes-one",
+    "keywords": ["heyelan", "kütle hareketi", "tanım"],
+    "fact": "Heyelan, kaya, döküntü veya toprağın yer çekimi etkisiyle yamaç aşağı hareketidir. Düşme, devrilme, kayma, yayılma ve akma gibi farklı hareket türlerini kapsar.",
+    "questions": ["Heyelan tam olarak nedir?", "Kütle hareketi ile heyelan ne anlama gelir?", "Heyelan türlerini kısaca açıklar mısın?"]
+  },
+  {
+    "id": "landslide_causes",
+    "title": "Heyelanın çoklu nedenleri",
+    "source": "https://www.usgs.gov/faqs/what-a-landslide-and-what-causes-one",
+    "keywords": ["neden", "tetikleyici", "heyelan", "deprem", "yağış"],
+    "fact": "Heyelanlar genellikle birden çok etkenin birleşmesiyle oluşur. Yağış, kar erimesi, yeraltı suyu değişimi, akarsu aşındırması, deprem ve insan faaliyetleri hareketi tetikleyebilir. Tek bir uydu katmanı neden-sonuç kararı verdirmez.",
+    "questions": ["Heyelana neler sebep olur?", "Yalnızca eğim heyelanı açıklar mı?", "Yağış ve deprem heyelanı nasıl etkileyebilir?"]
+  },
+  {
+    "id": "rainfall_water",
+    "title": "Yağış ve suyun rolü",
+    "source": "https://www.usgs.gov/programs/landslide-hazards/science/overview-rainfall-induced-landslides",
+    "keywords": ["yağış", "yağmur", "şiddetli yağmur", "su", "gözenek basıncı", "doygunluk", "yeraltı suyu"],
+    "fact": "Yağışın etkisi yerel zemin nemi, gözenek suyu basıncı, yağış şiddeti ve süresiyle değişir. Bu uygulama bunları ölçmediği için yağışla tetiklenen heyelanın zamanını veya olasılığını hesaplayamaz.",
+    "questions": ["Şiddetli yağmur heyelanı nasıl tetikler?", "Gözenek suyu basıncı neden önemlidir?", "Bu sistem yağıştan sonra heyelan olacak mı diyebilir mi?"]
+  },
+  {
+    "id": "warning_signs",
+    "title": "Sahadaki uyarı işaretleri",
+    "source": "https://www.usgs.gov/programs/landslide-hazards/what-are-signs-landslide-development-what-do-i-do-if-a-landslide-occurs",
+    "keywords": ["çatlak", "işaret", "belirti", "duvar", "ağaç", "acil"],
+    "fact": "Yeni veya büyüyen zemin/duvar çatlakları, eğilen direkler veya ağaçlar, yeni su sızıntıları ve akarsu seviyesinde ani değişim olası hareket işaretleri olabilir. Bazı heyelanlar belirti vermeden de oluşur. Acil tehlikede bölgeden uzaklaşıp yerel acil yardım birimine başvurulmalıdır.",
+    "questions": ["Heyelan öncesi hangi işaretler görülebilir?", "Bahçede yeni çatlak oluştu, ne yapmalıyım?", "Heyelan tehlikesinde ilk güvenli adım nedir?"]
+  },
+  {
+    "id": "hazard_vs_risk",
+    "title": "Tehlike ve risk farkı",
+    "source": "https://www.usgs.gov/glossary/landslides-glossary",
+    "keywords": ["tehlike", "risk", "olasılık", "maruziyet", "puan"],
+    "fact": "Heyelan tehlikesi hareketin meydana gelmesiyle, risk ise tehlikenin insan ve varlıklar üzerindeki olası sonuçlarıyla ilişkilidir. Ulak'ın 0–100 göstergesi doğrulanmış olay olasılığı veya kayıp riski değildir.",
+    "questions": ["Heyelan tehlikesi ile risk aynı şey mi?", "Ekrandaki 70 puan yüzde 70 heyelan olasılığı mı?", "Risk puanı nasıl yorumlanmalı?"]
+  },
+  {
+    "id": "site_investigation",
+    "title": "Saha incelemesi gereği",
+    "source": "https://www.fhwa.dot.gov/engineering/geotech/pubs/012546.pdf",
+    "keywords": ["zemin etüdü", "sondaj", "parsel", "saha", "yapılaşma"],
+    "fact": "Mühendislik zemin etüdü, proje ve arazinin koşullarına göre planlanan yerinde inceleme, sondaj, numune, arazi/laboratuvar testleri ve yeraltı suyu gözlemlerini içerir. Harita tahmini bunların yerine geçmez.",
+    "questions": ["Gerçek zemin etüdünde neler yapılır?", "Uydu verisi sondajın yerine geçer mi?", "Bir parselin yapılaşması için hangi saha bilgileri gerekir?"]
+  },
+  {
+    "id": "spt_cpt",
+    "title": "SPT ve CPT",
+    "source": "https://www.fhwa.dot.gov/pavement/materials/hmec/pubs/module_b/lesson04_wbt.pdf",
+    "keywords": ["spt", "cpt", "arazi testi", "penetrasyon"],
+    "fact": "SPT ve CPT gibi yerinde deneyler yeraltındaki tabakaların mühendislik davranışını incelemeye yardım eder. Sonuçları numune, laboratuvar testleri ve yeraltı suyu bilgisiyle birlikte yetkili uzman yorumlamalıdır.",
+    "questions": ["SPT ile CPT ne işe yarar?", "Penetrasyon testi tek başına yeterli mi?", "Zemin dayanımı nasıl araştırılır?"]
+  },
+  {
+    "id": "slope_stability",
+    "title": "Şev stabilitesi",
+    "source": "https://flh.fhwa.dot.gov/resources/design/pddm/Geotechnical_TGM.pdf",
+    "keywords": ["şev", "stabilite", "kayma", "dayanım", "güvenlik katsayısı"],
+    "fact": "Şev stabilitesi hesabı yalnızca eğim açısına dayanmaz. Tabaka geometrisi, kayma dayanımı, süreksizlikler, yükler ve yeraltı suyu koşulları birlikte incelenir. Gerekli parametreler saha ve laboratuvar çalışmalarından gelir.",
+    "questions": ["Bir şevin stabilitesi nasıl değerlendirilir?", "30 derece eğim otomatik tehlikeli mi?", "Şev güvenlik katsayısı için hangi veriler gerekir?"]
+  },
+  {
+    "id": "drainage",
+    "title": "Drenaj kararı",
+    "source": "https://www.usgs.gov/faqs/what-a-landslide-and-what-causes-one",
+    "keywords": ["drenaj", "istinat", "önlem", "su tahliyesi"],
+    "fact": "Su koşulları yamaç hareketini etkileyebilir; ancak drenaj veya istinat yapısının tipi ve boyutu bu sohbetten seçilemez. Yerel jeoloji, su ve dayanım verileriyle mühendislik tasarımı gerekir.",
+    "questions": ["Drenaj heyelanı kesin önler mi?", "İstinat duvarı yapmalı mıyım?", "Bir şev için hangi önlem seçilmeli?"]
+  },
+  {
+    "id": "openlandmap",
+    "title": "OpenLandMap ölçeği",
+    "source": "https://developers.google.com/earth-engine/datasets/catalog/OpenLandMap_SOL_SOL_CLAY-WFRACTION_USDA-3A1A1A_M_v02",
+    "keywords": ["openlandmap", "kil", "kum", "250", "harita tahmini"],
+    "fact": "Ulak'ın kil ve kum değerleri OpenLandMap'in yaklaşık 250 metre çözünürlüklü 0 cm harita tahminleridir. Bir parselden alınmış numunenin laboratuvar sonucu değildir.",
+    "questions": ["Ekrandaki kil ve kum yüzdesi nasıl elde ediliyor?", "250 metrelik toprak haritası parselimi temsil eder mi?", "OpenLandMap değeri gerçek ölçüm mü?"]
+  },
+  {
+    "id": "texture_not_strength",
+    "title": "Doku ve dayanım farklıdır",
+    "source": "https://www.fhwa.dot.gov/pavement/materials/hmec/pubs/module_b/lesson04_wbt.pdf",
+    "keywords": ["kil", "kum", "silt", "taşıma kapasitesi", "dayanım", "doku"],
+    "fact": "Kil, kum ve silt oranları tane boyu dağılımını anlatır. Taşıma kapasitesi veya kayma dayanımı bu yüzdelerden tek başına hesaplanamaz; zemin koşulu ve uygun mühendislik deneyleri gerekir.",
+    "questions": ["Kil oranından taşıma kapasitesi bulunur mu?", "Kumlu zemin her zaman güvenli midir?", "Silt yüzdesi heyelanı belirler mi?"]
+  },
+  {
+    "id": "srtm",
+    "title": "SRTM eğim verisi",
+    "source": "https://developers.google.com/earth-engine/datasets/catalog/USGS_SRTMGL1_003",
+    "keywords": ["srtm", "eğim", "30 metre", "yükseklik"],
+    "fact": "Ulak eğimi yaklaşık 30 metre çözünürlüklü SRTM sayısal yükseklik verisinden türetir. Bu bölgesel eğim tahmini, parselin güncel topoğrafik ölçümüyle aynı değildir.",
+    "questions": ["Eğim değeri nereden geliyor?", "SRTM eğimi parseldeki gerçek eğim midir?", "30 metre çözünürlük ne demek?"]
+  },
+  {
+    "id": "ndvi",
+    "title": "NDVI yorumu",
+    "source": "https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED",
+    "keywords": ["ndvi", "bitki", "sentinel", "yeşillik"],
+    "fact": "NDVI, Sentinel-2'nin kırmızı ve yakın kızılötesi bantlarından türetilen bitki örtüsü göstergesidir. Ulak'ta yalnızca bilgi amaçlıdır; puana girmez ve zeminin taşıma kapasitesini göstermez.",
+    "questions": ["NDVI nedir?", "Bitki örtüsü puana dahil mi?", "Yüksek NDVI zemin güvenli demek mi?"]
+  },
+  {
+    "id": "validation",
+    "title": "Ulak saha karşılaştırması",
+    "source": "validation/REPORT.md",
+    "keywords": ["doğrulama", "hata", "karşılaştırma", "13 profil"],
+    "fact": "Türkiye'deki 13 WoSIS saha profilinde harita ile ölçüm arasındaki ortalama mutlak fark kil için 11,64, kum için 9,10 yüzde puandı. Bu küçük karşılaştırma yalnızca toprak doku tahminini sınar; heyelan puanını doğrulamaz.",
+    "questions": ["Sistem gerçek verilerle test edildi mi?", "Kil tahmininin hatası ne kadar?", "13 profil testi risk puanını doğruluyor mu?"]
+  },
+  {
+    "id": "score_limit",
+    "title": "Göreli gösterge sınırı",
+    "source": "validation/REPORT.md",
+    "keywords": ["puan", "skor", "olasılık", "yüzde", "gösterge"],
+    "fact": "Uygulamanın 0–100 puanı eğim ve toprak haritasından türetilen doğrulanmamış göreli göstergedir. 80 puan, yüzde 80 heyelan olasılığı, yapı yasağı veya izin anlamına gelmez.",
+    "questions": ["80 puan ne anlama geliyor?", "Risk yüzdesi gerçek olasılık mı?", "Puan düşükse inşaat güvenli mi?"]
+  },
+  {
+    "id": "report_reading",
+    "title": "Zemin etüdü raporu okuma",
+    "source": "https://www.fhwa.dot.gov/engineering/geotech/pubs/012546.pdf",
+    "keywords": ["rapor", "sondaj logu", "yeraltı suyu", "laboratuvar", "etüt"],
+    "fact": "Bir zemin etüdünü okurken sondaj konumları ve derinlikleri, tabaka tanımları, numune ve deney yöntemleri, yeraltı suyu gözlemleri ve mühendislik değerlendirmesi birlikte incelenmelidir. Tek bir N değeri veya harita puanı yeterli değildir.",
+    "questions": ["Zemin etüdü raporunda nelere bakmalıyım?", "Sondaj logu neden önemli?", "Yeraltı suyu raporda neden yer alır?"]
+  },
+  {
+    "id": "unknown_site",
+    "title": "Belirsiz parsel soruları",
+    "source": "https://www.fhwa.dot.gov/engineering/geotech/pubs/012546.pdf",
+    "keywords": ["ev", "parsel", "inşaat", "ruhsat", "güvenli", "uygun"],
+    "fact": "Belirli bir parsel için yapılaşma uygunluğu, temel seçimi veya ruhsat kararı yalnızca harita katmanlarıyla verilemez. Saha incelemesi ve yetkili mühendislik değerlendirmesi gerekir; sohbet kesin karar üretmemelidir.",
+    "questions": ["Bu arsaya ev yapılır mı?", "Buraya inşaat izni çıkar mı?", "Haritada düşük puan çıktı, arazi kesin güvenli mi?"]
+  },
+  {
+    "id": "missing_data",
+    "title": "Eksik veri",
+    "source": "validation/REPORT.md",
+    "keywords": ["veri yok", "ndvi yok", "eksik", "hata"],
+    "fact": "Bir konumda NDVI görüntüsü bulunmazsa Ulak NDVI alanını boş gösterebilir; bu bitki örtüsünün sıfır olduğu anlamına gelmez. Eğim veya toprak katmanı eksikse analiz sonucu üretilemez.",
+    "questions": ["NDVI verisi yok yazıyor, ne demek?", "Eksik görüntü sıfır bitki demek mi?", "Toprak verisi alınamazsa sistem ne yapar?"]
+  },
+  {
+    "id": "erosion_vs_landslide",
+    "title": "Erozyon ile heyelan farkı",
+    "source": "https://www.afad.gov.tr/aciklamali-afet-yonetimi-terimleri-sozlugu",
+    "keywords": ["erozyon", "heyelan farkı", "aşınma", "toprak taşınması"],
+    "fact": "AFAD'ın tanımlarına göre erozyon, toprağın su veya rüzgâr etkisiyle aşınıp taşınmasıdır. Heyelan ise kaya veya toprak kütlesinin yamaç aşağı hareketidir. İkisi aynı olay değildir.",
+    "questions": ["Erozyon ile heyelan arasındaki fark nedir?", "Toprağın yağmurla aşınması heyelan mıdır?", "Rüzgâr erozyonu ile yamaç kayması aynı şey mi?"]
+  },
+  {
+    "id": "afad_soil_survey",
+    "title": "AFAD zemin etüdü tanımı",
+    "source": "https://www.afad.gov.tr/aciklamali-afet-yonetimi-terimleri-sozlugu",
+    "keywords": ["zemin etüdü", "etüt", "numune", "afad", "sondaj"],
+    "fact": "Zemin etüdü, zeminin fiziksel ve mekanik özelliklerinin yerinde inceleme ve laboratuvar deneyleriyle araştırılmasını içerir. Uydu haritası bu ölçümleri sağlamaz; parsel için gereken etüdün yerine geçmez.",
+    "questions": ["AFAD'a göre zemin etüdü nedir?", "Uydu haritası zemin etüdünün yerini tutar mı?", "Zemin etüdünde neden numune alınır?"]
+  },
+  {
+    "id": "erosion_prevention",
+    "title": "Erozyonu azaltma yöntemleri",
+    "source": "https://www.nrcs.usda.gov/conservation-basics/soil/soil-health/soil-health-on-cropland",
+    "keywords": ["erozyon önleme", "erozyonu önlemek", "erozyon", "toprak koruma", "örtü bitkisi", "bitki örtüsü", "malç", "kontur", "teraslama", "rüzgar kıran"],
+    "fact": "Erozyonu azaltmak için toprağı yıl boyunca bitki veya bitki artıklarıyla örtülü tutmak, toprağı gereksiz işlememek, eğimli tarım alanlarında kontur boyunca çalışmak ve uygun yerlerde tampon bitki şeritleri kullanmak temel yöntemlerdir. Rüzgâr erozyonunda rüzgâr kıran bitki şeritleri de yardımcı olabilir. Uygulanacak yöntem; arazinin eğimi, toprak yapısı, yağış, kullanım biçimi ve erozyon türüne göre yerinde planlanmalıdır.",
+    "questions": ["Erozyonu önlemek için neler yapmalıyız?", "Tarlada toprak kaybını nasıl azaltabilirim?", "Bitki örtüsü erozyona karşı nasıl korur?"]
+  }
+]
