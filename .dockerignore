@@ -1,0 +1,15 @@
+.git
+.env
+service-account*.json
+credentials*.json
+*private-key*.json
+__pycache__/
+*.pyc
+.venv/
+models/
+*.log
+.pytest_cache/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

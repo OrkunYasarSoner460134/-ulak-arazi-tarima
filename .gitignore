@@ -1,0 +1,16 @@
+.env
+service-account*.json
+credentials*.json
+*private-key*.json
+__pycache__/
+*.pyc
+.venv/
+models/
+.hf/
+*.log
+.pytest_cache/
+.coverage
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

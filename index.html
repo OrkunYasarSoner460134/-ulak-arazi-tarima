@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulak | Zemin ve Erozyon Risk Analiz Sistemi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        [data-theme="dark"] {
+            --bg-primary:#0B0F0E;--bg-secondary:#111916;--bg-card:#151D1A;--bg-elevated:#1A2421;--bg-input:#0E1412;
+            --border-subtle:rgba(255,255,255,0.06);--accent:#4CAF50;--accent-dim:#2E7D32;--accent-glow:rgba(76,175,80,0.15);
+            --earth:#8D6E63;--text-primary:#E8ECE9;--text-secondary:#8A9B93;--text-muted:#5A6B63;
+            --risk-low:#4CAF50;--risk-med:#FFA726;--risk-high:#EF5350;--risk-crit:#B71C1C;
+            --shadow-md:0 4px 12px rgba(0,0,0,0.4);--toggle-bg:#1A2421;--toggle-knob:#4CAF50;
+        }
+        [data-theme="light"] {
+            --bg-primary:#F2F4F3;--bg-secondary:#FFFFFF;--bg-card:#FFFFFF;--bg-elevated:#F7F9F8;--bg-input:#FFFFFF;
+            --border-subtle:rgba(0,0,0,0.08);--accent:#2E7D32;--accent-dim:#1B5E20;--accent-glow:rgba(46,125,50,0.08);
+            --earth:#795548;--text-primary:#1A2421;--text-secondary:#4A5D55;--text-muted:#7A8A83;
+            --risk-low:#2E7D32;--risk-med:#E65100;--risk-high:#C62828;--risk-crit:#7A2828;
+            --shadow-md:0 4px 12px rgba(0,0,0,0.08);--toggle-bg:#E0E5E2;--toggle-knob:#2E7D32;
+        }
+        *{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}
+        
+        body{
+            font-family:'DM Sans',sans-serif;
+            background-color:var(--bg-primary);
+            background-image: radial-gradient(600px 400px at 20% 0%, var(--accent-glow), transparent 70%);
+            background-size: auto;
+            background-position: top;
+            background-attachment: fixed;
+            color:var(--text-primary);
+            line-height:1.6;
+            -webkit-font-smoothing:antialiased;
+            transition:background .4s,color .4s;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: transparent;
+            z-index: -1;
+        }
+
+        a{text-decoration:none;color:inherit}ul{list-style:none}
+        ::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg-primary)}::-webkit-scrollbar-thumb{background:var(--text-muted);border-radius:3px}
+        .container{width:100%;max-width:1280px;margin:0 auto;padding:0 24px}
+        .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;font-size:.9rem;font-weight:600;font-family:'DM Sans',sans-serif;border-radius:10px;cursor:pointer;transition:all .3s;border:none;outline:none}
+        .btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-dim));color:#fff;box-shadow:0 4px 15px rgba(76,175,80,.25)}
+        .btn-primary:hover{box-shadow:0 6px 25px rgba(76,175,80,.4);transform:translateY(-1px)}
+        .btn-outline{background:transparent;color:var(--accent);border:1.5px solid var(--accent-dim)}
+        .btn-outline:hover{background:var(--accent-glow);border-color:var(--accent)}
+
+        .form-error{display:none;background:rgba(239,83,80,.1);border:1px solid rgba(239,83,80,.3);color:var(--risk-high);padding:10px 12px;border-radius:10px;font-size:.825rem;margin-bottom:16px;line-height:1.5}
+        .btn:disabled{opacity:.6;cursor:wait;transform:none}
+        .theme-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;-webkit-user-select:none;user-select:none}
+        .theme-toggle svg{width:16px;height:16px;transition:all .3s}
+        .toggle-track{width:44px;height:24px;background:var(--toggle-bg);border-radius:12px;position:relative;transition:background .3s;border:1px solid var(--border-subtle)}
+        .toggle-knob{width:18px;height:18px;background:var(--toggle-knob);border-radius:50%;position:absolute;top:2px;left:2px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+        [data-theme="light"] .toggle-knob{transform:translateX(20px)}
+        .moon-icon,.sun-icon{color:var(--text-muted)}
+        [data-theme="dark"] .moon-icon{color:var(--accent)}[data-theme="light"] .sun-icon{color:var(--accent)}
+
+        header{background:var(--bg-secondary);backdrop-filter:blur(20px);border-bottom:1px solid var(--border-subtle);position:sticky;top:0;z-index:1000;transition:background .4s}
+        .nav-container{display:flex;justify-content:space-between;align-items:center;height:64px}
+        .logo{display:flex;align-items:center;gap:10px;font-size:1.25rem;font-weight:700}
+        .logo-icon{width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent-dim));border-radius:8px;display:flex;align-items:center;justify-content:center}
+        .logo-icon svg{width:18px;height:18px;fill:#fff}
+        .nav-right{display:flex;align-items:center;gap:32px}
+        .nav-links{display:flex;gap:32px}.nav-links li a{font-size:.875rem;font-weight:500;color:var(--text-muted);transition:all .3s}.nav-links li a:hover{color:var(--accent)}
+
+        .hero{padding:80px 0 60px;position:relative;overflow:hidden}
+        .hero::before{content:'';position:absolute;top:-50%;left:-20%;width:600px;height:600px;background:radial-gradient(circle,var(--accent-glow),transparent 70%);pointer-events:none}
+        .hero-content{text-align:center;max-width:700px;margin:0 auto;position:relative;z-index:2}
+        .hero-badge{display:inline-block;background:var(--accent-glow);color:var(--accent);padding:6px 16px;border-radius:20px;font-size:.8rem;font-weight:600;margin-bottom:24px;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(76,175,80,.15)}
+        .hero h1{font-size:2.8rem;font-weight:700;line-height:1.15;margin-bottom:20px;letter-spacing:-.5px}.hero h1 span{color:var(--accent)}
+        .hero p{font-size:1.05rem;color:var(--text-secondary);margin-bottom:36px;line-height:1.7}
+        .hero-buttons{display:flex;gap:12px;justify-content:center}
+
+        .analysis-section{padding:60px 0 80px}.section-header{text-align:center;margin-bottom:40px}
+        .section-header h2{font-size:1.75rem;font-weight:700;margin-bottom:12px}
+        .section-header p{color:var(--text-secondary);max-width:600px;margin:0 auto;font-size:.95rem}
+        .app-layout{display:grid;grid-template-columns:380px 1fr;gap:0;background:var(--bg-card);border-radius:16px;border:1px solid var(--border-subtle);overflow:hidden;min-height:600px;box-shadow:var(--shadow-md);transition:background .4s,border-color .4s}
+        .app-sidebar{background:var(--bg-secondary);border-right:1px solid var(--border-subtle);display:flex;flex-direction:column;transition:background .4s}
+        .sidebar-header{padding:20px 24px;border-bottom:1px solid var(--border-subtle)}
+        .sidebar-header h3{font-size:1rem;font-weight:600;display:flex;align-items:center;gap:8px}
+        .sidebar-header h3 svg{width:18px;height:18px;stroke:var(--accent);fill:none}
+        .map-container{width:100%;height:260px;position:relative;border-bottom:1px solid var(--border-subtle)}
+        .map-container #map{width:100%;height:100%}
+        .map-hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.6);backdrop-filter:blur(8px);color:#ccc;font-size:.75rem;padding:5px 12px;border-radius:6px;z-index:500;pointer-events:none}
+        .sidebar-form{padding:20px 24px;flex:1}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+        .form-label{display:block;font-size:.75rem;font-weight:600;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+        .form-control{width:100%;padding:10px 12px;background:var(--bg-input);border:1px solid var(--border-subtle);border-radius:10px;font-size:.9rem;color:var(--text-primary);font-family:'JetBrains Mono',monospace;transition:all .3s}
+        .form-control:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
+        .form-control::placeholder{color:var(--text-muted)}
+        .quick-locations{padding:0 24px 20px}.quick-locations h4{font-size:.7rem;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+        .location-chips{display:flex;flex-wrap:wrap;gap:6px}
+        .chip{padding:5px 12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:20px;font-size:.8rem;color:var(--text-secondary);cursor:pointer;transition:all .3s}
+        .chip:hover{background:var(--accent-glow);border-color:var(--accent-dim);color:var(--accent)}
+
+        .app-main{padding:32px;position:relative}
+        .empty-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:var(--text-muted)}
+        .empty-state svg{width:48px;height:48px;stroke:var(--text-muted);fill:none;margin-bottom:16px;opacity:.5}
+        .empty-state h3{font-size:1.1rem;color:var(--text-secondary);margin-bottom:8px}
+        .empty-state p{font-size:.875rem;max-width:320px}
+        .loading-state{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%}
+        .spinner{width:40px;height:40px;border:3px solid var(--border-subtle);border-left-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;margin-bottom:20px}
+        @keyframes spin{to{transform:rotate(360deg)}}
+        .loading-text{font-weight:600;margin-bottom:6px;font-size:.95rem}
+        .loading-subtext{font-size:.8rem;color:var(--text-muted)}
+
+        .results-state{display:none}
+        .results-header{margin-bottom:28px;padding-bottom:20px;border-bottom:1px solid var(--border-subtle)}
+        .results-header h2{font-size:1.3rem;font-weight:700;margin-bottom:8px}
+        .coord-display{font-family:'JetBrains Mono',monospace;background:var(--bg-elevated);padding:4px 10px;border-radius:6px;color:var(--accent);font-size:.8rem;border:1px solid var(--border-subtle)}
+        .metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+        .metric-card{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:10px;padding:18px;transition:all .3s}
+        .metric-card:hover{border-color:rgba(128,128,128,.2)}
+        .metric-card.info-card{opacity:.75}
+        .metric-icon{margin-bottom:10px}.metric-icon svg{width:22px;height:22px}
+        .metric-title{font-size:.75rem;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+        .metric-value{font-size:1.1rem;font-weight:600;margin-bottom:14px}
+        .metric-detail{font-size:.75rem;color:var(--text-muted);margin-bottom:10px;font-family:'JetBrains Mono',monospace}
+        .metric-badge{display:inline-block;font-size:.65rem;padding:2px 8px;border-radius:4px;background:var(--accent-glow);color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        .metric-badge.info{background:rgba(100,100,100,.15);color:var(--text-muted)}
+        .progress-bar-bg{height:4px;background:rgba(128,128,128,.15);border-radius:2px;overflow:hidden}
+        .progress-bar-fill{height:100%;width:0%;transition:width 1s ease-in-out;border-radius:2px}
+
+        .final-risk-card{background:var(--bg-elevated);border-radius:10px;padding:28px;border:1px solid var(--border-subtle);display:flex;align-items:center;gap:28px}
+        .risk-gauge{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;font-weight:bold;flex-shrink:0;box-shadow:inset 0 0 0 6px rgba(255,255,255,.1);transition:all .3s}
+        .risk-score{font-size:1.75rem;line-height:1;font-family:'JetBrains Mono',monospace}
+        .risk-label-small{font-size:.6rem;text-transform:uppercase;letter-spacing:1.5px;margin-top:4px;opacity:.8}
+        .risk-details{flex:1}.risk-details h3{font-size:1.1rem;margin-bottom:8px}
+        .risk-details p{color:var(--text-secondary);margin-bottom:14px;font-size:.875rem;line-height:1.6}
+        .recommendation-box{background:var(--bg-card);padding:14px 16px;border-left:3px solid var(--accent);border-radius:0 10px 10px 0;font-size:.825rem;color:var(--text-secondary);line-height:1.5}
+        .recommendation-box strong{display:block;margin-bottom:4px;color:var(--text-primary);font-size:.8rem}
+        .risk-formula{margin-top:12px;font-size:.75rem;color:var(--text-muted);font-family:'JetBrains Mono',monospace}
+
+        .features{padding:80px 0}.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .feature-card{background:var(--bg-card);padding:32px 24px;border-radius:16px;border:1px solid var(--border-subtle);transition:all .3s}
+        .feature-card:hover{border-color:rgba(128,128,128,.2);transform:translateY(-3px)}
+        .feature-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);margin-bottom:16px;letter-spacing:1px}
+        .feature-card h3{font-size:1.05rem;margin-bottom:12px}.feature-card p{color:var(--text-secondary);font-size:.875rem;line-height:1.6}
+        .info-section{padding:80px 0}.info-content{max-width:680px;margin:0 auto;text-align:center}
+        .info-content p{margin-bottom:16px;color:var(--text-secondary);font-size:.95rem;line-height:1.7}
+        footer{border-top:1px solid var(--border-subtle);padding:32px 0;transition:border-color .4s}
+        .footer-content{display:flex;justify-content:space-between;align-items:center}
+        .footer-logo{color:var(--text-secondary);font-size:.9rem;font-weight:600}.footer-right{font-size:.8rem;color:var(--text-muted)}
+
+        @media(max-width:992px){.app-layout{grid-template-columns:1fr}.map-container{height:220px}.features-grid{grid-template-columns:1fr 1fr}}
+        @media(max-width:768px){.hero h1{font-size:2rem}.metrics-grid{grid-template-columns:1fr}.features-grid{grid-template-columns:1fr}.final-risk-card{flex-direction:column;text-align:center}.recommendation-box{border-left:none;border-top:3px solid var(--accent);border-radius:0 0 10px 10px}.nav-links{display:none}.form-row{grid-template-columns:1fr}}
+        .leaflet-container{background:var(--bg-primary)!important}
+        .leaflet-control-zoom a{background:var(--bg-card)!important;color:var(--text-primary)!important;border-color:var(--border-subtle)!important}
+        .leaflet-control-zoom a:hover{background:var(--bg-elevated)!important}
+        .leaflet-control-attribution{display:none!important}
+
+        /* Sohbet penceresi */
+        .ai-widget-container { position: fixed; bottom: 30px; right: 30px; z-index: 9999; font-family: 'DM Sans', sans-serif; }
+        .ai-chat-btn { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-dim)); color: #fff; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(76,175,80,.4); display: flex; align-items: center; justify-content: center; transition: all 0.3s; }
+        .ai-chat-btn:hover { transform: scale(1.05); }
+        .ai-chat-window { position: absolute; bottom: 75px; right: 0; width: 350px; height: 450px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 16px; box-shadow: var(--shadow-md); display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(10px); transition: all 0.3s ease; }
+        .ai-chat-window.active { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .chat-header { background: var(--bg-secondary); padding: 15px 20px; border-bottom: 1px solid var(--border-subtle); display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 1rem; }
+        .close-chat { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+        .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 12px; font-size: 0.85rem; line-height: 1.5; }
+        .chat-msg.ai { background: var(--bg-elevated); color: var(--text-primary); align-self: flex-start; border-bottom-left-radius: 4px; }
+        .chat-msg.user { background: var(--accent-glow); color: var(--accent); align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid rgba(76,175,80,.2); }
+        .chat-sources { margin-top:8px; font-size:.72rem; color:var(--text-muted); }
+        .chat-sources a { color:var(--accent); text-decoration:underline; }
+        .chat-input { padding: 15px; border-top: 1px solid var(--border-subtle); display: flex; gap: 8px; background: var(--bg-card); }
+        .chat-input input { flex: 1; background: var(--bg-input); border: 1px solid var(--border-subtle); padding: 10px 15px; border-radius: 20px; color: var(--text-primary); outline: none; font-size: 0.85rem; }
+        .chat-input input:focus { border-color: var(--accent); }
+        .chat-input button { background: var(--accent); color: #fff; border: none; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.3s; }
+        .chat-input button:hover { background: var(--accent-dim); }
+        .typing-indicator { font-size: 0.75rem; color: var(--text-muted); font-style: italic; align-self: flex-start; display: none; padding: 0 10px; }
+    </style>
+</head>
+<body>
+    <header><div class="container nav-container">
+        <div class="logo"><div class="logo-icon"><svg viewBox="0 0 24 24"><path d="M12 2L2 7L12 12L22 7L12 2Z"/><path d="M2 12L12 17L22 12" fill="none" stroke="#fff" stroke-width="2"/><path d="M2 17L12 22L22 17" fill="none" stroke="#fff" stroke-width="2"/></svg></div>Ulak</div>
+        <div class="nav-right">
+            <ul class="nav-links"><li><a href="#home">Ana Sayfa</a></li><li><a href="#app">Analiz</a></li><li><a href="#how-it-works">Nasıl Çalışır?</a></li><li><a href="#about">Hakkında</a></li></ul>
+            <div class="theme-toggle" onclick="toggleTheme()" title="Tema Değiştir">
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <div class="toggle-track"><div class="toggle-knob"></div></div>
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+            </div>
+        </div>
+    </div></header>
+
+    <section id="home" class="hero"><div class="container hero-content">
+        <div class="hero-badge">Uydu Destekli Analiz Sistemi</div>
+        <h1>Uydu Verileriyle <span>Arazi Ön Taraması</span></h1>
+        <p>Harita tabanlı toprak, eğim ve bitki örtüsü tahminlerini inceleyin. Sonuçlar yerinde zemin etüdünün yerine geçmez.</p>
+        <div class="hero-buttons">
+            <a href="#app" class="btn btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Analiz Başlat</a>
+            <a href="#how-it-works" class="btn btn-outline">Teknolojiyi İncele</a>
+        </div>
+    </div></section>
+
+    <section id="app" class="analysis-section"><div class="container">
+        <div class="section-header"><h2>Risk Analiz Paneli</h2><p>Haritadan konum seçin veya koordinatları girin. Sistem, OpenLandMap toprak verileri ve SRTM eğim haritalarını analiz edecektir.</p></div>
+        <div class="app-layout">
+            <div class="app-sidebar">
+                <div class="sidebar-header"><h3><svg viewBox="0 0 24 24" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Konum Belirle</h3></div>
+                <div class="map-container"><div id="map"></div><div class="map-hint">Haritaya tıklayarak konum seçin</div></div>
+                <form id="analysisForm" class="sidebar-form">
+                    <div id="formError" class="form-error" role="alert"></div>
+                    <div class="form-row">
+                        <div class="form-group"><label class="form-label" for="latitude">Enlem</label><input type="number" id="latitude" class="form-control" placeholder="39.9208" step="0.0001" min="-90" max="90" required></div>
+                        <div class="form-group"><label class="form-label" for="longitude">Boylam</label><input type="number" id="longitude" class="form-control" placeholder="32.8541" step="0.0001" min="-180" max="180" required></div>
+                    </div>
+                    <button type="submit" id="analyzeBtn" class="btn btn-primary" style="width:100%"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12L22 2L12 22L10 14Z"/></svg><span id="analyzeBtnText">Analiz Et</span></button>
+                </form>
+                <div class="quick-locations"><h4>Örnek Konumlar</h4>
+                    <div class="location-chips">
+                        <div class="chip" onclick="fillCoords(39.9208,32.8541)">Ankara</div>
+                        <div class="chip" onclick="fillCoords(40.6565,29.9320)">Yalova</div>
+                        <div class="chip" onclick="fillCoords(40.9958,39.7167)">Trabzon</div>
+                        <div class="chip" onclick="fillCoords(37.7500,30.2833)">Burdur</div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-main">
+                <div id="emptyState" class="empty-state">
+                    <svg viewBox="0 0 24 24" stroke-width="1.5"><path d="M9 20L3 17V4L9 7M9 20L15 17M9 20V7M15 17L21 20V7L15 4M15 17V4M9 7L15 4" stroke="currentColor"/></svg>
+                    <h3>Henüz bir konum seçilmedi</h3><p>Haritadan tıklayarak veya koordinat girerek analiz başlatabilirsiniz.</p>
+                </div>
+                <div id="loadingState" class="loading-state">
+                    <div class="spinner"></div><h3 class="loading-text">Veriler Analiz Ediliyor...</h3><p class="loading-subtext">Google Earth Engine ve OpenLandMap verileri işleniyor. Bu işlem 5-10 saniye sürebilir.</p>
+                </div>
+                <div id="resultsState" class="results-state">
+                    <div class="results-header"><h2>Arazi Ön Tarama Raporu</h2><p>Sorgulanan Koordinat: <span id="resCoord" class="coord-display">--</span></p></div>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--earth)" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18"/></svg></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div class="metric-title" style="margin-bottom:0">Toprak Harita Tahmini</div><span class="metric-badge">Göstergeye Dahil</span></div>
+                            <div id="resSoilType" class="metric-value">--</div><div id="soilDetail" class="metric-detail"></div>
+                            <div class="progress-bar-bg"><div id="barSoil" class="progress-bar-fill"></div></div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon"><svg viewBox="0 0 24 24" fill="none" stroke="var(--earth)" stroke-width="2"><path d="M3 20L10 8L14 14L21 4"/></svg></div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div class="metric-title" style="margin-bottom:0">Eğim Analizi</div><span class="metric-badge">Göstergeye Dahil</span></div>
+                            <div id="resSlope" class="metric-value">--</div><div id="slopeDetail" class="metric-detail"></div>
+                            <div class="progress-bar-bg"><div id="barSlope" class="progress-bar-fill"></div></div>
+                        </div>
+                    </div>
+                    <div id="ndviInfoCard" class="metric-card info-card" style="margin-bottom:24px">
+                        <div style="display:flex;align-items:center;gap:16px">
+                            <div class="metric-icon" style="margin-bottom:0"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" width="22" height="22"><path d="M12 2L8 8H3L7 13L5 20L12 16L19 20L17 13L21 8H16Z"/></svg></div>
+                            <div style="flex:1"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><div class="metric-title" style="margin-bottom:0">Bitki Örtüsü (NDVI)</div><span class="metric-badge info">Sadece Bilgi</span></div>
+                            <div id="resVegetation" class="metric-value" style="margin-bottom:0;font-size:1rem">--</div></div>
+                        </div>
+                    </div>
+                    <div class="final-risk-card">
+                        <div id="riskGauge" class="risk-gauge" style="background-color:var(--text-muted)"><span id="riskScoreVal" class="risk-score">0</span><span class="risk-label-small">Gösterge</span></div>
+                        <div class="risk-details">
+                            <h3 id="riskTitle">Değerlendirme Bekleniyor</h3><p id="riskDesc">--</p>
+                            <div class="recommendation-box"><strong>Nasıl yorumlanmalı?</strong><span id="riskAction">--</span></div>
+                            <div id="riskFormula" class="risk-formula">Doğrulanmamış göreli gösterge; olasılık veya yapı izni değildir.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div></section>
+
+    <section id="how-it-works" class="features"><div class="container">
+        <div class="section-header"><h2>Sistem Nasıl Çalışır?</h2><p>İki temel coğrafi veri katmanı Google Earth Engine üzerinden analiz edilerek bütüncül bir risk raporu oluşturulur.</p></div>
+        <div class="features-grid">
+            <div class="feature-card"><div class="feature-num">01 — TOPRAK</div><h3>OpenLandMap Toprak Analizi</h3><p>Google Earth Engine üzerinden OpenLandMap veri setleri kullanılarak, seçilen konumun kil, kum ve silt oranları 250m çözünürlükte tespit edilir.</p></div>
+            <div class="feature-card"><div class="feature-num">02 — TOPOĞRAFYA</div><h3>SRTM Eğim Analizi</h3><p>NASA SRTM sayısal yükseklik modeli kullanılarak bölgenin eğim derecesi 30m çözünürlükte hesaplanır. Kademeli risk eğrisi ile değerlendirme yapılır.</p></div>
+            <div class="feature-card"><div class="feature-num">03 — BİTKİ ÖRTÜSÜ</div><h3>Sentinel-2 NDVI (Bilgi)</h3><p>Sentinel-2 uydu görüntüleri ile bitki örtüsü yoğunluğu ölçülür. Bu veri risk skoruna dahil edilmez, yalnızca bölge hakkında ek bilgi sağlar.</p></div>
+        </div>
+    </div></section>
+
+    <section id="about" class="info-section"><div class="container">
+        <div class="section-header"><h2>Proje Hakkında</h2></div>
+        <div class="info-content">
+            <p>Plansız kentleşme ve yanlış zemin seçimi nedeniyle birçok bölge doğal afetlere karşı kırılgan durumdadır. Erozyon ve toprak kayması, yapı ruhsatı süreçlerinde dikkat edilmesi gereken kritik parametrelerin başında gelir.</p>
+            <p>Ulak, bölgesel veri katmanlarını incelemek için bir ön tarama aracıdır. Harita tahminleri parsel ölçeğinde sondaj, laboratuvar ölçümü ve uzman zemin etüdü yerine kullanılamaz.</p>
+        </div>
+    </div></section>
+
+    <footer><div class="container footer-content"><div class="footer-logo">Ulak</div><div class="footer-right">&copy; 2026 Ulak Erozyon Analiz Sistemi</div></div></footer>
+
+    <div class="ai-widget-container">
+        <div id="aiChatWindow" class="ai-chat-window">
+            <div class="chat-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M12 2a2 2 0 0 1 2 2c0 1.1-.9 2-2 2s-2-.9-2-2 .9-2 2-2zM4 10h16M4 14h16M6 6h12v12H6z"/></svg>
+                    Ulak AI Danışmanı
+                </div>
+                <button class="close-chat" onclick="toggleChat()">×</button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-msg ai">Merhaba! Harita katmanlarının ne anlama geldiğini açıklayabilirim. Yapılaşma veya zemin etüdü kararı veremem.</div>
+                <div id="typingIndicator" class="typing-indicator">Ulak AI analiz ediyor...</div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="aiInput" placeholder="Sorunuzu buraya yazın..." onkeypress="handleEnter(event)">
+                <button onclick="sendAiMessage()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+            </div>
+        </div>
+        <button class="ai-chat-btn" onclick="toggleChat()" title="Yapay Zeka Danışmanına Sor">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </button>
+    </div>
+
+    <script>
+        let currentTileLayer=null;
+        let baseLayers={};
+        function getStoredTheme(){return localStorage.getItem('ulak-theme')||'dark'}
+        function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('ulak-theme',t)}
+        function toggleTheme(){const c=document.documentElement.getAttribute('data-theme');applyTheme(c==='dark'?'light':'dark')}
+
+        const mapInstance=L.map('map',{center:[39.0,35.5],zoom:6,zoomControl:true,attributionControl:false});
+        const initTheme=getStoredTheme();
+
+        baseLayers={
+            "Uydu": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Esri World Imagery'}),
+            "Sokak": L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'OpenStreetMap'})
+        };
+        currentTileLayer=baseLayers["Uydu"].addTo(mapInstance);
+        L.control.layers(baseLayers).addTo(mapInstance);
+
+        applyTheme(initTheme);
+
+        let marker=null;
+        function placeMarker(lat,lng){if(marker)mapInstance.removeLayer(marker);marker=L.circleMarker(L.latLng(lat,lng),{radius:8,fillColor:'#4CAF50',color:'#fff',weight:2,fillOpacity:.9}).addTo(mapInstance)}
+        mapInstance.on('click',function(e){latInput.value=e.latlng.lat.toFixed(4);lngInput.value=e.latlng.lng.toFixed(4);placeMarker(e.latlng.lat,e.latlng.lng)});
+
+        const form=document.getElementById('analysisForm'),latInput=document.getElementById('latitude'),lngInput=document.getElementById('longitude');
+        const emptyState=document.getElementById('emptyState'),loadingState=document.getElementById('loadingState'),resultsState=document.getElementById('resultsState');
+        const resCoord=document.getElementById('resCoord'),resSoilType=document.getElementById('resSoilType'),resSlope=document.getElementById('resSlope'),resVegetation=document.getElementById('resVegetation');
+        const barSoil=document.getElementById('barSoil'),barSlope=document.getElementById('barSlope');
+        const riskGauge=document.getElementById('riskGauge'),riskScoreVal=document.getElementById('riskScoreVal'),riskTitle=document.getElementById('riskTitle'),riskDesc=document.getElementById('riskDesc'),riskAction=document.getElementById('riskAction');
+
+        function getRiskColor(s){if(s<=30)return'var(--risk-low)';if(s<=60)return'var(--risk-med)';if(s<=80)return'var(--risk-high)';return'var(--risk-crit)'}
+        function fillCoords(lat,lng){latInput.value=lat;lngInput.value=lng;placeMarker(lat,lng);mapInstance.setView(L.latLng(lat,lng),10)}
+
+        form.addEventListener('submit',async function(e){
+            e.preventDefault();
+            const lat=parseFloat(latInput.value),lng=parseFloat(lngInput.value);
+            const errBox=document.getElementById('formError');
+            const btn=document.getElementById('analyzeBtn');
+            const btnText=document.getElementById('analyzeBtnText');
+            errBox.style.display='none';errBox.innerText='';
+            if(isNaN(lat)||isNaN(lng)){errBox.innerText="Lütfen geçerli koordinatlar girin.";errBox.style.display='block';return}
+            if(lat<-90||lat>90||lng<-180||lng>180){errBox.innerText="Enlem -90 ile 90, boylam -180 ile 180 arasında olmalı.";errBox.style.display='block';return}
+            emptyState.style.display='none';resultsState.style.display='none';loadingState.style.display='flex';
+            btn.disabled=true;btnText.innerText='Analiz ediliyor...';
+            placeMarker(lat,lng);mapInstance.setView(L.latLng(lat,lng),10);
+            const ctrl=new AbortController();
+            const timer=setTimeout(()=>ctrl.abort(),90000);
+            try{
+                const r=await fetch('/analiz-et',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({lat,lng}),signal:ctrl.signal});
+                if(!r.ok){const error=await r.json().catch(()=>({}));throw new Error(error.detail||("Sunucu hatası ("+r.status+")"))}
+                const data=await r.json();
+                if(data.status==="success"){renderResults(data)}else{throw new Error("Analiz tamamlanamadı.")}
+            }catch(err){
+                console.error(err);
+                const msg=err.name==='AbortError'?"İstek zaman aşımına uğradı (90 sn). Tekrar deneyin.":err.message;
+                errBox.innerText="Sunucuya bağlanılamadı: "+msg;errBox.style.display='block';
+                loadingState.style.display='none';emptyState.style.display='flex';
+            }finally{clearTimeout(timer);btn.disabled=false;btnText.innerText='Analiz Et'}
+        });
+
+        function renderResults(d){
+            loadingState.style.display='none';resultsState.style.display='block';
+            const m=d.metrics,fs=d.final_risk_score;
+            resCoord.innerText=d.coordinates.lat.toFixed(4)+', '+d.coordinates.lng.toFixed(4);
+            resSoilType.innerText=m.soil.name;
+            if(m.soil.clay_percent!==undefined)document.getElementById('soilDetail').innerText='Kil %'+m.soil.clay_percent+' · Kum %'+m.soil.sand_percent+' · Silt %'+m.soil.silt_percent;
+            barSoil.style.width=m.soil.risk_percent+'%';barSoil.style.backgroundColor=getRiskColor(m.soil.risk_percent);
+            const sd=m.topography.slope_degrees;
+            let sl=sd<3?"Düz Arazi":(sd<8?"Hafif Eğim":(sd<15?"Orta Eğim":(sd<25?"Dik Yamaç":"Çok Dik")));
+            resSlope.innerText=sd+'° — '+sl;
+            document.getElementById('slopeDetail').innerText='Göreli eğim göstergesi: '+m.topography.risk_percent+'/100';
+            barSlope.style.width=m.topography.risk_percent+'%';barSlope.style.backgroundColor=getRiskColor(m.topography.risk_percent);
+            const v=m.vegetation.ndvi_index;
+            let vd=v===null?"Bu konumda uygun görüntü yok":(v<0.15?"Çok düşük NDVI":(v<0.3?"Düşük NDVI":(v<0.5?"Orta NDVI":(v<0.7?"Yüksek NDVI":"Çok yüksek NDVI"))));
+            resVegetation.innerText=v===null?vd:(v+' — '+vd);
+            riskScoreVal.innerText=fs;riskGauge.style.backgroundColor=getRiskColor(fs);
+            const riskFormula=document.getElementById('riskFormula');
+            riskFormula.innerText=(d.score_method==='heuristic'?'Eğim ve toprak verileriyle hesaplanan kural tabanlı gösterge.':'Sentetik verilerle eğitilmiş model göstergesi.')+' Doğrulanmış heyelan olasılığı değildir.';
+            if(fs<=30){riskTitle.innerText="Göreli Gösterge: Düşük";riskTitle.style.color='var(--risk-low)';riskDesc.innerText="Harita katmanlarının bu konumdaki birleşik puanı düşük."}
+            else if(fs<=60){riskTitle.innerText="Göreli Gösterge: Orta";riskTitle.style.color='var(--risk-med)';riskDesc.innerText="Harita katmanlarının bu konumdaki birleşik puanı orta düzeyde."}
+            else if(fs<=80){riskTitle.innerText="Göreli Gösterge: Yüksek";riskTitle.style.color='var(--risk-high)';riskDesc.innerText="Harita katmanlarının bu konumdaki birleşik puanı yüksek."}
+            else{riskTitle.innerText="Göreli Gösterge: Çok Yüksek";riskTitle.style.color='var(--risk-crit)';riskDesc.innerText="Harita katmanlarının bu konumdaki birleşik puanı çok yüksek."}
+            riskAction.innerText="Bu puan yapılaşma kararı, heyelan olasılığı veya zemin etüdü sonucu değildir. Parsel için sondaj, laboratuvar testleri ve yetkili uzman değerlendirmesi gerekir.";
+        }
+
+        function toggleChat() {
+            const chatWindow = document.getElementById('aiChatWindow');
+            chatWindow.classList.toggle('active');
+        }
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') {
+                sendAiMessage();
+            }
+        }
+
+        async function sendAiMessage() {
+            const inputField = document.getElementById('aiInput');
+            const message = inputField.value.trim();
+            if (!message) return;
+            if (message.length > 1000) return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            const typingIndicator = document.getElementById('typingIndicator');
+
+            const userMsgDiv = document.createElement('div');
+            userMsgDiv.className = 'chat-msg user';
+            userMsgDiv.innerText = message;
+            chatMessages.insertBefore(userMsgDiv, typingIndicator);
+            
+            inputField.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            typingIndicator.style.display = 'block';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            try {
+                const ctrl=new AbortController();
+                const timer=setTimeout(()=>ctrl.abort(),60000);
+                const response = await fetch('/yapay-zeka', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: message }),
+                    signal: ctrl.signal
+                });
+                clearTimeout(timer);
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.detail || 'Yerel model yanıt vermedi.');
+
+                typingIndicator.style.display = 'none';
+                
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.className = 'chat-msg ai';
+                aiMsgDiv.innerText = data.cevap;
+                if (data.kaynaklar && data.kaynaklar.length) {
+                    const sources = document.createElement('div');
+                    sources.className = 'chat-sources';
+                    sources.append('Kaynak: ');
+                    data.kaynaklar.forEach((source, index) => {
+                        if (index) sources.append(' · ');
+                        if (source.url) {
+                            const link = document.createElement('a');
+                            link.href = source.url;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.innerText = source.baslik;
+                            sources.appendChild(link);
+                        } else sources.append(source.baslik);
+                    });
+                    aiMsgDiv.appendChild(sources);
+                }
+                chatMessages.insertBefore(aiMsgDiv, typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            } catch (err) {
+                typingIndicator.style.display = 'none';
+                const aiMsgDiv = document.createElement('div');
+                aiMsgDiv.className = 'chat-msg ai';
+                aiMsgDiv.innerText = err.message || 'Yerel model bağlantısında hata oluştu.';
+                chatMessages.insertBefore(aiMsgDiv, typingIndicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+    </script>
+</body>
+</html>
