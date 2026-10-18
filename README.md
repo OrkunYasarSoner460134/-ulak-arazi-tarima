@@ -9,11 +9,11 @@ Python 3.11 kurulu bir terminalde, bu klasörde:
 ```powershell
 python -m pip install -r requirements.txt
 earthengine authenticate
-$env:EARTH_ENGINE_PROJECT = "terrakalkan"
+$env:EARTH_ENGINE_PROJECT = "ulak-arazi"
 python -m uvicorn main:app --host 127.0.0.1 --port 8000
 ```
 
-Ardından `http://127.0.0.1:8000/` adresini açın. `terrakalkan` yerine Earth Engine erişimi olan gerçek Google Cloud proje kimliğinizi kullanın.
+Ardından `http://127.0.0.1:8000/` adresini açın. `ulak-arazi` yerine Earth Engine erişimi olan gerçek Google Cloud proje kimliğinizi kullanın.
 
 ## Canlı sunucu
 

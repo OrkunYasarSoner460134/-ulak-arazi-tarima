@@ -23,7 +23,7 @@ for _candidate in (BASE_DIR / "llm", BASE_DIR / "Ulak" / "llm"):
     if _candidate.is_dir() and str(_candidate.parent) not in sys.path:
         sys.path.insert(0, str(_candidate.parent))
 
-EARTH_ENGINE_PROJECT = os.environ.get("EARTH_ENGINE_PROJECT", "terrakalkan")
+EARTH_ENGINE_PROJECT = os.environ.get("EARTH_ENGINE_PROJECT", "ulak-arazi")
 CACHE_TTL_SECONDS = int(os.environ.get("ULAK_CACHE_TTL", "3600"))
 
 ee_ready = False
