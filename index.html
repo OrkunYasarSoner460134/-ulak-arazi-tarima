@@ -43,8 +43,18 @@
             content: '';
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: transparent;
+            background-image: url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            opacity: 0.12;
+            pointer-events: none;
             z-index: -1;
+            transition: opacity .4s ease;
+        }
+        [data-theme="light"] body::before {
+            opacity: 0.08;
+            filter: grayscale(30%);
         }
 
         a{text-decoration:none;color:inherit}ul{list-style:none}
